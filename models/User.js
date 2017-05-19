@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+// const Reminder = require('../models/Reminder')
+// const reminderSchema = Reminder.schema
+
 
 const userSchema = new mongoose.Schema({
   userName: {
@@ -11,6 +14,7 @@ const userSchema = new mongoose.Schema({
     ref: 'Reminder'
   }]
 })
+
 
 // add bcrypt hashing to model (works on a password field)!
 // adds password digest
