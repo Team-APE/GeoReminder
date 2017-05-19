@@ -28,7 +28,6 @@
     "babel-preset-react": "^6.24.1",
     "postcss-loader": "^2.0.5",
     "postcss-nested": "^2.0.2",
-    "semantic-ui": "^2.2.10",
     "style-loader": "^0.17.0",
     "webpack": "^2.5.1"
   }
