@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const Location = require('../models/Location')
+const locationSchema = Location.schema
 
 const reminderSchema = new mongoose.Schema({
   title: {
@@ -10,11 +12,7 @@ const reminderSchema = new mongoose.Schema({
     type: String,
     required: false
   },
-  location: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Location',
-    required: true
-  },
+  location: locationSchema,
 }, {
   timestamps: true
 })

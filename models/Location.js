@@ -1,16 +1,10 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const location = new mongoose.Schema({
+const locationSchema = new mongoose.Schema({
   address: {
     type: String,
     required: true
-  },
-  city: {
-    type: String
-  },
-  state: {
-    type: String
   },
   latitude: {
     type: String
@@ -20,6 +14,6 @@ const location = new mongoose.Schema({
   }
 })
 
-const Reminder = mongoose.model('Reminder', reminderSchema);
+const Location = mongoose.model('Location', locationSchema);
 
-module.exports = Reminder;
+module.exports = Location;

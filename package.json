@@ -6,14 +6,19 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@google/maps": "^0.3.1",
     "body-parser": "~1.15.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
+    "dotenv": "^4.0.0",
     "ejs": "~2.5.2",
     "express": "~4.14.0",
+    "geocode": "0.0.3",
+    "geocoder-geojson": "^1.11.0",
     "mongoose": "^4.10.0",
     "mongoose-bcrypt": "^1.4.2",
     "morgan": "~1.7.0",
+    "node-open-geocoder": "^2.0.0",
     "serve-favicon": "~2.3.0"
   }
 }
