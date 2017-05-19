@@ -4,6 +4,7 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const mongoose = require('./config/database');
 const routes = require('./config/routes');
@@ -11,7 +12,6 @@ const routes = require('./config/routes');
 const app = express();
 
 // Load env variables from .env file
-require('dotenv').config();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
