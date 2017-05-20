@@ -29,8 +29,8 @@ function createReminder(req, res, next) {
       reminderData.location.latitude = data[0].lat
       reminderData.location.longitude = data[0].lon
       Reminder.create(reminderData, function(err, reminder) {
-        reminder._id = mongoose.Types.ObjectId()
-        reminder.isNew = true;
+        // reminder._id = mongoose.Types.ObjectId()
+        // reminder.isNew = true;
         if (err) return console.log(err)
         console.log('new reminder: ', reminder)
         User.findById(req.params.userId, function(err, user) {

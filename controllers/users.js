@@ -27,20 +27,49 @@ function create(req, res, next) {
 function me(req, res, next) {
   User.findOne({
     _id: req.params.id
-  }).exec()
-    .then(function(user) {
-      res.json({
-        success: true,
-        message: 'Successfully retrieved user data.',
-        data: user
-      });
+  })
+    .populate('reminders')
+    .exec((err, user) => {
+      res.json(user)
     })
+    //.exec()
+    // .then(function(user) {
+    //   res.json({
+    //     success: true,
+    //     message: 'Successfully retrieved user data.',
+    //     data: user
+    //   });
+    //})
     .catch(function(err) {
       next(err);
     });
 }
 
+//compare hashed passwords
+function verifyUser(req, res, next) {
+  User.findOne({
+    username: req.body.username
+  }, function(err, user) {
+    if (err || !user) {
+      res.json({
+        success: false
+      })
+    } else {
+      if (user.verifyPasswordSync(req.body.password)) {
+        req._id = user._id
+        next()
+      } else {
+        res.json({
+          success: false
+        })
+      }
+    }
+  })
+}
+
+
 module.exports = {
   create: create,
-  me: me
+  me: me,
+  verifyUser: verifyUser
 }
