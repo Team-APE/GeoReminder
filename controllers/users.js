@@ -6,13 +6,14 @@ function create(req, res, next) {
   }
   User.create(req.body)
     .then(function(user) {
-      res.json({
-        success: true,
-        message: 'Successfully created user.',
-        data: {
-          id: user._id
-        }
-      });
+      // res.json({
+      //   success: true,
+      //   message: 'Successfully created user.',
+      //   data: {
+      //     id: user._id
+      //   }
+      // });
+
     }).catch(function(err) {
     if (err.message.match(/E11000/)) {
       err.status = 409;
@@ -48,14 +49,17 @@ function me(req, res, next) {
 //compare hashed passwords
 function verifyUser(req, res, next) {
   User.findOne({
-    username: req.body.username
+    userName: req.body.userName
   }, function(err, user) {
     if (err || !user) {
+      console.log(user)
       res.json({
         success: false
       })
     } else {
+
       if (user.verifyPasswordSync(req.body.password)) {
+
         req._id = user._id
         next()
       } else {
