@@ -36,7 +36,7 @@ usersRouter.route('/')
 
 //shows reminders of user
 usersRouter.route('/:id')
-  .get(usersController.me)
+  .get(sessionController.isLoggedIn, usersController.me)
 
 // usersRouter.route('/')
 
