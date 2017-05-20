@@ -7,7 +7,7 @@ const Map = withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
     defaultZoom={10}
-    defaultCenter={props.myPosition}
+    defaultCenter={props.myPosition.lat && props.myPosition.lng? props.myPosition : {lat: 33.9795475, lng: -118.4233875}}
     onClick={props.onMapClick}
   >
     {props.markers.map(marker => (
@@ -27,7 +27,7 @@ const Map = withGoogleMap(props => (
           strokeOpacity: 1,
           strokeWeight: 1,
         }}>
-      {console.log(props.myPosition)}
+      {console.log("MY POSITION!!",props.myPosition)}
       </Circle>
     )}
 

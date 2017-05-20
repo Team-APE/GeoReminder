@@ -17,6 +17,7 @@ class App extends Component {
         lat: null,
         lng: null
       },
+      me: {username: null},
       //MAP MARKERS
       markers: [],
 
@@ -75,6 +76,7 @@ class App extends Component {
     })
   }
 
+
   handleMarkerRightClick(targetMarker) {
     const nextMarkers = this.state.markers.filter(marker => marker !== targetMarker)
     this.setState({
@@ -120,6 +122,7 @@ class App extends Component {
         console.log("RESPONSEEEEEE POSt", resp);
         resp.data.location.lat = Number(resp.data.location.latitude);
         resp.data.location.lng = Number(resp.data.location.longitude);
+        console.log("WHILE POSTING", resp.data.location)
         this.addNewMarker(resp.data.location)
 
         // close the modal --TO DO
@@ -163,11 +166,20 @@ class App extends Component {
 
     //REMINDER LOCATIONS-------
     console.log("in component did mount!!")
+    let that =this;
     axios.get('/api/users/591e67734c429f47e2be4da2')
       .then(function (response) {
-        const myPosition = 0;
-        const reminderids = response.data.data.reminders;
-        console.log("user reminders ids", response.data.data);
+        const reminders = response.data.reminders;
+        console.log("USER REMINDERS", reminders);
+        reminders.forEach(el=>{
+
+          //set position of each event
+          console.log("ELEMENT", el)
+          const pos  = {};
+          pos.lat = Number(el.location.latitude);
+          pos.lng = Number(el.location.longitude);
+          that.addNewMarker(pos);
+        })
 
 
       })
