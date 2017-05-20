@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/api/auth', routes.auth)
 app.use('/api/users', routes.users);
 app.use('/api/reminders', routes.reminders);
 app.use('/', routes.other);
