@@ -57,8 +57,10 @@ function verifyUser(req, res, next) {
         success: false
       })
     } else {
+      console.log('Verifying,..', req.body.password)
 
       if (user.verifyPasswordSync(req.body.password)) {
+              console.log('verify gj')
 
         req._id = user._id
         next()

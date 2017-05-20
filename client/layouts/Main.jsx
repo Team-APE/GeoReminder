@@ -17,6 +17,7 @@ class Main extends Component {
           handleMapClick={this.props.handleMapClick}
           markers={this.props.markers}
           handleMarkerRightClick={this.props.handleMarkerRightClick}
+          handleMarkerClick={this.props.handleMarkerClick}
           myPosition={this.props.myPosition}>
         </MapWrapper>
       </div>

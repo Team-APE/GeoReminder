@@ -9,7 +9,6 @@ const sessionSchema = new Schema({
   },
   createdAt: {
     type: Date,
-    expires: 5000000000000000,
     default: Date.now
   }
 });

@@ -34,6 +34,7 @@ function createReminder(req, res, next) {
         // reminder.isNew = true;
         if (err) return console.log(err)
         User.findById(req.params.userId, function(err, user) {
+          console.log('createReminder', user)
           user.reminders.push(reminder._id)
           user.save((err, user) => {
             // User.findOne({

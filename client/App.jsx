@@ -27,6 +27,12 @@ class App extends Component {
         note: "",
         address: "",
         hide: false
+      },
+      detailModal: {
+        title: "",
+        note: "",
+        address: "",
+        hide: false
       }
     }
     //METHOD BINDS+DECLARATIONS-------------------------------
@@ -35,6 +41,7 @@ class App extends Component {
     this.handleMapClick = this.handleMapClick.bind(this)
     this.addNewMarker = this.addNewMarker.bind(this)
     this.handleMarkerRightClick = this.handleMarkerRightClick.bind(this)
+    this.handleMarkerClick = this.handleMarkerClick.bind(this)
 
     //NEW REMINDER 
     this.handleModalSubmit = this.handleModalSubmit.bind(this)
@@ -52,7 +59,10 @@ class App extends Component {
         handleMapClick={this.handleMapClick}
         markers={this.state.markers}
         handleMarkerRightClick={this.handleMarkerRightClick}
-        myPosition = {this.state.myPosition}>
+        handleMarkerClick={this.handleMarkerClick}
+        myPosition = {this.state.myPosition}
+        detailModal = {this.state.detailModal}
+        >
       </Main>
     )
   }
@@ -71,20 +81,40 @@ class App extends Component {
         key: Date.now() // Add a key property for: http://fb.me/react-warning-keys
       }
     ]
-    this.setState({
-      markers: nextMarkers
-    })
+    // Disables map click drop pin
+    // this.setState({
+    //   markers: nextMarkers
+    // })
   }
 
 
   handleMarkerRightClick(targetMarker) {
     const nextMarkers = this.state.markers.filter(marker => marker !== targetMarker)
+    // youre suppose to do an ajax call to remove the reminder
     this.setState({
       markers: nextMarkers
     })
   }
 
-
+  handleMarkerClick(target) {
+    console.log('clicked marker', target)
+    const {lat, lng} = target.position
+    // console.log('my latlatlat', lat)
+    let modalData = this.state.allReminders.filter((cur) => {
+      if (cur.location.latitude.match(String(lat))) return true
+        else return false
+    })
+    console.log('thisthisthit', modalData)
+    let {title, notes, location} = modalData[0]
+    alert(JSON.stringify({title, notes, location}, null, 2))
+    // let modalData = {
+    //   title: "",
+    //   note: "",
+    //   address: "",
+    //   hide: false
+    // }
+    // this.setState()
+  }
 
 
   //NEW REMINDERS-----------------------
@@ -108,7 +138,7 @@ class App extends Component {
 
     axios({
       method: 'post',
-      url: '/api/reminders/591e67734c429f47e2be4da2',
+      url: '/api/reminders/5920be6397248624471835ca',
       data: {
         title: this.state.modal.title,
         notes: this.state.modal.note,
@@ -167,10 +197,11 @@ class App extends Component {
     //REMINDER LOCATIONS-------
     console.log("in component did mount!!")
     let that =this;
-    axios.get('/api/users/591e67734c429f47e2be4da2')
+    axios.get('/api/users/5920be6397248624471835ca')
       .then(function (response) {
         const reminders = response.data.reminders;
         console.log("USER REMINDERS", reminders);
+        that.setState(Object.assign(that.state, {allReminders: reminders}))
         reminders.forEach(el=>{
 
           //set position of each event
