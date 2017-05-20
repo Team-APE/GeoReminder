@@ -14,6 +14,7 @@ function getReminder(req, res, next) {
 }
 
 function createReminder(req, res, next) {
+  console.log("REQUEST BODY", req.body)
   let reminderData = {
     title: req.body.title,
     notes: req.body.notes,
@@ -32,17 +33,18 @@ function createReminder(req, res, next) {
         // reminder._id = mongoose.Types.ObjectId()
         // reminder.isNew = true;
         if (err) return console.log(err)
-        console.log('new reminder: ', reminder)
         User.findById(req.params.userId, function(err, user) {
           user.reminders.push(reminder._id)
           user.save((err, user) => {
-            User.findOne({
-              _id: user._id
-            })
-              .populate('reminders')
-              .exec((err, user) => {
-                res.json(user)
-              })
+            // User.findOne({
+            //   _id: user._id
+            // })
+            //   .populate('reminders')
+            //   .exec((err, user) => {
+            //     console.log("USER SENDING BACK", user)
+            //     res.json(user)
+            //   })
+            res.json(reminder)
           })
         })
       })

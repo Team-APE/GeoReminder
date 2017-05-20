@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps'
+import { withGoogleMap, GoogleMap, Marker, Circle } from 'react-google-maps'
 
 
 //stateless google map
@@ -7,7 +7,7 @@ const Map = withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
     defaultZoom={10}
-    defaultCenter={{ lat: 33.979581, lng: -118.422478 }}
+    defaultCenter={props.myPosition.lat && props.myPosition.lng? props.myPosition : {lat: 33.9795475, lng: -118.4233875}}
     onClick={props.onMapClick}
   >
     {props.markers.map(marker => (
@@ -16,6 +16,21 @@ const Map = withGoogleMap(props => (
         onRightClick={() => props.onMarkerRightClick(marker)}
       />
     ))}
+    {props.myPosition.lat && props.myPosition.lng && (
+      <Circle
+        center={props.myPosition}
+        radius={2000}
+        options={{
+          fillColor: `red`,
+          fillOpacity: 0.20,
+          strokeColor: `red`,
+          strokeOpacity: 1,
+          strokeWeight: 1,
+        }}>
+      {console.log("MY POSITION!!",props.myPosition)}
+      </Circle>
+    )}
+
   </GoogleMap>
 ))
 
@@ -34,7 +49,8 @@ class MapWrapper extends Component {
           onMapLoad={this.props.handleMapLoad}
           onMapClick={this.props.handleMapClick}
           markers={this.props.markers}
-          onMarkerRightClick={this.props.handleMarkerRightClick}>
+          myPosition={this.props.myPosition}
+          onMarkerRightClick={this.props.handleMarkerRightClick} >
         </Map>
       </div>
     )

@@ -13,27 +13,27 @@ class App extends Component {
 
     //STATE PROPERTIES----------------------------------
     this.state = {
+      myPosition: {
+        lat: null,
+        lng: null
+      },
+      me: {username: null},
       //MAP MARKERS
-      markers: [{
-        position: {
-          lat: 33.979581,
-          lng: -118.422478
-        },
-        key: 'LA',
-        defaultAnimation: 2
-      }],
+      markers: [],
 
       //NEW REMINDERS
       modal: {
         title: "",
         note: "",
-        address: ""
+        address: "",
+        hide: false
       }
     }
     //METHOD BINDS+DECLARATIONS-------------------------------
     //MAP 
     this.handleMapLoad = this.handleMapLoad.bind(this)
     this.handleMapClick = this.handleMapClick.bind(this)
+    this.addNewMarker = this.addNewMarker.bind(this)
     this.handleMarkerRightClick = this.handleMarkerRightClick.bind(this)
 
     //NEW REMINDER 
@@ -51,7 +51,8 @@ class App extends Component {
         handleMapLoad={this.handleMapLoad}
         handleMapClick={this.handleMapClick}
         markers={this.state.markers}
-        handleMarkerRightClick={this.handleMarkerRightClick}>
+        handleMarkerRightClick={this.handleMarkerRightClick}
+        myPosition = {this.state.myPosition}>
       </Main>
     )
   }
@@ -75,6 +76,7 @@ class App extends Component {
     })
   }
 
+
   handleMarkerRightClick(targetMarker) {
     const nextMarkers = this.state.markers.filter(marker => marker !== targetMarker)
     this.setState({
@@ -82,41 +84,109 @@ class App extends Component {
     })
   }
 
-  //NEW REMINDERS
+
+
+
+  //NEW REMINDERS-----------------------
+  addNewMarker(location) {
+    console.log('New Marker position: ', location)
+    const nextMarkers = [
+      ...this.state.markers,
+      {
+        position: location,
+        defaultAnimation: 2,
+        key: Date.now()
+      }
+    ]
+    this.setState({
+      markers: nextMarkers
+    })
+  }
+
   handleModalSubmit(event) {
     event.preventDefault()
-    console.log("Submitted form!", this.state, event.target)
-    // // ajax calls
-    // axios({
-    //   method: 'post',
-    //   url: '/user/',
-    //   data: {
-    //     firstName: 'Fred',
-    //     lastName: 'Flintstone'
-    //   }
-    // });
-    //0 -on submit create a new reminder on the database by POST request to  
-    //use response to create new marker
 
-    // close the modal
+    axios({
+      method: 'post',
+      url: '/api/reminders/591e67734c429f47e2be4da2',
+      data: {
+        title: this.state.modal.title,
+        notes: this.state.modal.note,
+        location: {
+          address: this.state.modal.address
+        }
+      }
+    })
+      //use response to create new marker
+      .then((resp) => {
+        console.log("RESPONSEEEEEE POSt", resp);
+        resp.data.location.lat = Number(resp.data.location.latitude);
+        resp.data.location.lng = Number(resp.data.location.longitude);
+        console.log("WHILE POSTING", resp.data.location)
+        this.addNewMarker(resp.data.location)
 
-    // update 
+        // close the modal --TO DO
+        // let newState = Object.assign(this.state);
+        // newState.modal.hide = true;
+        // this.setState()
+
+
+      })
+
+
   }
 
   handleModalChange(event, type) {
-    console.log(type)
-    console.log(event)
-    const obj = {}
-
-    obj[type] = event.target.value
-    this.setState(Object.assign(this.state, { modal: obj }))
+    const newState = Object.assign(this.state)
+    newState.modal[type] = event.target.value
+    this.setState(newState)
   }
 
+  //COMPONENT DID MOUNT-----------------------------------------------------
+  componentDidMount() {
 
-  // //COMPONENT DID MOUNT-----------------------------------------
-  // componentDidMount() {
+    //USER POSITION--------
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    };
 
-  // }
+    function error(err) {
+      console.warn(`ERROR(${err.code}): ${err.message}`);
+    };
+    
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const newState = Object.assign(this.state);
+      newState.myPosition.lat = pos.coords.latitude;
+      newState.myPosition.lng = pos.coords.longitude;
+      this.setState(newState)
+      console.log("MY POSITION", this.state.myPosition)
+    }, error, options);
+
+    //REMINDER LOCATIONS-------
+    console.log("in component did mount!!")
+    let that =this;
+    axios.get('/api/users/591e67734c429f47e2be4da2')
+      .then(function (response) {
+        const reminders = response.data.reminders;
+        console.log("USER REMINDERS", reminders);
+        reminders.forEach(el=>{
+
+          //set position of each event
+          console.log("ELEMENT", el)
+          const pos  = {};
+          pos.lat = Number(el.location.latitude);
+          pos.lng = Number(el.location.longitude);
+          that.addNewMarker(pos);
+        })
+
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   //RENDER-----------------------------------------------------
   render() {
@@ -130,9 +200,6 @@ class App extends Component {
               <NewReminder handleChange={this.handleModalChange} handleSubmit={this.handleModalSubmit} data={this.state.modal} />
             </Menu.Menu>
           </Menu>
-
-
-
           <Route exact path='/' component={Home} />
           <Route path='/main' render={this.MainRoute} />
         </div>
