@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Button } from 'semantic-ui-react'
-import GettingStartedExample from '../components/Map.jsx'
+import MapWrapper from '../components/Map.jsx'
 
 class Main extends Component {
   constructor(props) {
@@ -13,7 +13,11 @@ class Main extends Component {
   render () {
     return (
       <div>
-        <GettingStartedExample />
+        <MapWrapper handleMapLoad={this.props.handleMapLoad}
+          handleMapClick={this.props.handleMapClick}
+          markers={this.props.markers}
+          handleMarkerRightClick={this.props.handleMarkerRightClick}>
+        </MapWrapper>
       </div>
     )
   }
