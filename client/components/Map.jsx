@@ -6,7 +6,7 @@ import { withGoogleMap, GoogleMap, Marker, Circle } from 'react-google-maps'
 const Map = withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
-    defaultZoom={10}
+    defaultZoom={13}
     defaultCenter={props.myPosition.lat && props.myPosition.lng? props.myPosition : {lat: 33.9795475, lng: -118.4233875}}
     onClick={props.onMapClick}
   >
@@ -14,12 +14,13 @@ const Map = withGoogleMap(props => (
       <Marker
         {...marker}
         onRightClick={() => props.onMarkerRightClick(marker)}
+        onClick={() => props.onMarkerClick(marker)}
       />
     ))}
     {props.myPosition.lat && props.myPosition.lng && (
       <Circle
         center={props.myPosition}
-        radius={2000}
+        radius={200}
         options={{
           fillColor: `red`,
           fillOpacity: 0.20,
@@ -50,7 +51,8 @@ class MapWrapper extends Component {
           onMapClick={this.props.handleMapClick}
           markers={this.props.markers}
           myPosition={this.props.myPosition}
-          onMarkerRightClick={this.props.handleMarkerRightClick} >
+          onMarkerRightClick={this.props.handleMarkerRightClick}
+          onMarkerClick={this.props.handleMarkerClick} >
         </Map>
       </div>
     )

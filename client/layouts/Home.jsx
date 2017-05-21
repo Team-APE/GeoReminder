@@ -79,7 +79,7 @@ class Home extends Component {
   }
 }
 const CardExampleCard = (props) => (
-  <Card className="centered">
+  <Card className="centered loginCard" style={{marginTop: '100px'}}>
     <Card.Content>
       <Card.Header>
         Welcome to GeoReminder
